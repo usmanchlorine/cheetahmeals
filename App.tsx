@@ -1,12 +1,16 @@
+import { Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import Home from './src/screen/Home';
 import { COLORS } from './src/theme/colors';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+
 
 const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>hello this is usman </Text>
-    </View>
+    <SafeAreaProvider>
+      <Home />
+    </SafeAreaProvider>
   );
 };
 
@@ -15,8 +19,7 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     backgroundColor: COLORS.textFieldBackgroundColor,
   },
 });
