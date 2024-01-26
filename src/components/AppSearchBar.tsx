@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { Searchbar, SearchbarProps } from 'react-native-paper';
+import { COLORS } from '../theme/colors';
 
 interface searchBarProps extends SearchbarProps {}
 
@@ -12,7 +13,7 @@ const AppSearchBar: React.FC<searchBarProps> = () => {
       onChangeText={setSearchQuery}
       value={searchQuery}
       mode="bar"
-      style={{ backgroundColor: 'white' }}
+      style={{ backgroundColor: COLORS.white }}
     />
   );
 };
