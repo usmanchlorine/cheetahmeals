@@ -1,5 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { SPACERS } from '../../theme/spacers';
 import AppText from '../../theme/AppText';
 import { COLORS } from '../../theme/colors';
@@ -8,19 +8,21 @@ import { Icon } from 'react-native-paper';
 import { Chip } from 'react-native-paper';
 import { mockImages } from '../../service/restaurant/mock';
 interface RestaurantInfoProps {
-  name: string;
-  icon?: string;
-  address?: string;
-  isOpening?: boolean;
-  rating: number;
-  isTemporarlyClosed?: boolean;
-  vicinity?: string;
-  isOpenNow?: boolean;
-  priceLevel: number;
-  types?: string[];
+  restaurant: {
+    name: string;
+    icon?: string;
+    address?: string;
+    isOpening?: boolean;
+    rating: number;
+    isTemporarlyClosed?: boolean;
+    vicinity?: string;
+    isOpenNow?: boolean;
+    priceLevel: number;
+    types?: string[];
+  };
 }
 
-const RestaurantInfoCard: React.FC<any> = ({ restaurant }) => {
+const RestaurantInfoCard: React.FC<RestaurantInfoProps> = ({ restaurant }) => {
   const {
     name,
     icon = '',
@@ -30,12 +32,20 @@ const RestaurantInfoCard: React.FC<any> = ({ restaurant }) => {
     rating,
     priceLevel,
     types,
-  }: RestaurantInfoProps = restaurant;
-  const arrayOfStar = Array.from(new Array(Math.floor(rating ? rating : 0)));
-  const arrayOfHollowStar = Array.from(
-    new Array(5 - Math.floor(rating ? rating : 0)),
+  } = restaurant;
+
+  const [arrayOfStar, arrayOfHollowStar] = useMemo(() => {
+    const arrayOfStar = Array.from(new Array(Math.floor(rating ? rating : 0)));
+    const arrayOfHollowStar = Array.from(
+      new Array(5 - Math.floor(rating ? rating : 0)),
+    );
+    return [arrayOfStar, arrayOfHollowStar];
+  }, [rating]);
+
+  const arrayOfPricelevel = useMemo(
+    () => Array.from(new Array(priceLevel ? priceLevel : 0)),
+    [priceLevel],
   );
-  const arrayOfPricelevel = Array.from(new Array(priceLevel ? priceLevel : 0));
   const randomImage = mockImages.at(
     Math.floor(Math.random() * mockImages.length),
   );
@@ -88,7 +98,7 @@ const RestaurantInfoCard: React.FC<any> = ({ restaurant }) => {
             variant="sub-heading"
             style={styles.restaurantHeading}
           >
-            {name.length >= 24 ? name.slice(0, 24) + '...' : name}
+            {name?.length >= 24 ? name.slice(0, 24) + '...' : name}
           </AppText>
           <View style={{ flexDirection: 'row' }}>
             {arrayOfStar.map((star, idx) => (

@@ -9,6 +9,7 @@ import TabNavigator from './src/utils/TabNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { RestaurantContextProvider } from './src/service/restaurant/restaurant.context';
+import { LocationContextProvider } from './src/service/location/location.context';
 const App = () => {
   let [fontsLoaded] = useFonts({
     Oswald_400Regular,
@@ -21,13 +22,15 @@ const App = () => {
   }
 
   return (
-    <RestaurantContextProvider>
-      <NavigationContainer>
-        <SafeAreaProvider>
-          <TabNavigator />
-        </SafeAreaProvider>
-      </NavigationContainer>
-    </RestaurantContextProvider>
+    <LocationContextProvider>
+      <RestaurantContextProvider>
+        <NavigationContainer>
+          <SafeAreaProvider>
+            <TabNavigator />
+          </SafeAreaProvider>
+        </NavigationContainer>
+      </RestaurantContextProvider>
+    </LocationContextProvider>
   );
 };
 

@@ -1,9 +1,10 @@
 import camelize from 'camelize';
 import { mocks } from "./mock"
 import { restaurantType } from './restaurant.type';
-type keys = keyof typeof mocks // object ki typeof or uski keyof 
+export type keys = keyof typeof mocks // object ki typeof or uski keyof 
 
 export const restaurantRequest = (location: keys) => {
+    console.log(" this is location cordinate", location)
     return new Promise((resolve, reject) => {
         if (mocks[location]) {
 

@@ -6,7 +6,9 @@ import React, {
   createContext,
   useContext,
 } from 'react';
-import { dataTransformed, restaurantRequest } from './restaurant.service';
+import { dataTransformed, keys, restaurantRequest } from './restaurant.service';
+import { useLocationContext } from '../location/location.context';
+import { locationCities } from '../location/location.service';
 
 export type ReactChildren = {
   children?: React.ReactNode;
@@ -30,18 +32,30 @@ export const RestaurantContextProvider: React.FC<ReactChildren> = ({
   const [restaurants, setRestaurants] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { location } = useLocationContext();
+  const locationCordinate = useMemo(() => {
+    return `${location.data?.lat},${location.data?.lng}` as keys; //agar yaha par bari calculation hoti tu bhot faida hota idher
+  }, [location]);
 
   useEffect(() => {
     setIsLoading(true);
     setTimeout(() => {
-      restaurantRequest('41.878113,-87.629799')
-        .then((data: any) => dataTransformed(data.results))
-        .then((camelizeData) => setRestaurants(camelizeData))
-        .catch((error) => setError(error))
+      restaurantRequest(locationCordinate) //usecallback or usememo
+        .then((data: any) => {
+          console.log('chal gaya');
+          return dataTransformed(data.results);
+        })
+        .then((camelizeData) => {
+          setError(null);
+
+          setRestaurants(camelizeData);
+        })
+        .catch((error) => {
+          setError(error);
+        })
         .finally(() => setIsLoading(false));
     }, 2000);
-  }, []);
-
+  }, [location]);
   return (
     <RestaurantContext.Provider
       value={{ restaurant: restaurants, isLoading, error }}
